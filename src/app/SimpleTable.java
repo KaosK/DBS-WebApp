@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class SimpleTable {
 
-	private String[] columnNames;
+	private List<String> columnNames;
 	private int[] columnWidth;
 	private List<List<String>> tableData;
 
@@ -26,13 +26,14 @@ public class SimpleTable {
 	public SimpleTable(ResultSet rset) throws SQLException {
 		ResultSetMetaData rsmd = rset.getMetaData();
 		int columnCount = rsmd.getColumnCount();
-		columnNames = new String[columnCount];
+		columnNames = new ArrayList<String>();
 		columnWidth = new int[columnCount];
 		tableData = new ArrayList<List<String>>();
 
 		for (int i = 1; i <= columnCount; i++) {
-			columnNames[i - 1] = rsmd.getColumnName(i);
-			columnWidth[i - 1] = Math.max(columnNames[i - 1].length(),
+			String columnName = rsmd.getColumnName(i);
+			columnNames.add(columnName);
+			columnWidth[i - 1] = Math.max(columnName.length(),
 					columnWidth[i - 1]);
 		}
 
@@ -51,9 +52,19 @@ public class SimpleTable {
 		return tableData.iterator();
 	}
 	
-	@SuppressWarnings("rawtypes")
-	public List getList() {
+
+	/**
+	 * @return the tableData
+	 */
+	public List<List<String>> getTableData() {
 		return tableData;
+	}
+
+	/**
+	 * @return the columnNames
+	 */
+	public List<String> getColumnNames() {
+		return columnNames;
 	}
 
 	/**
@@ -62,14 +73,14 @@ public class SimpleTable {
 	 */
 	public void printToConsole() {
 		// Header:
-		for (int i = 0; i < columnNames.length; i++) {
+		for (int i = 0; i < columnNames.size(); i++) {
 			int width = columnWidth[i] + 4;
 			System.out.printf("%-" + width + "." + (width - 2) + "s",
-					columnNames[i]);
+					columnNames.get(i));
 		}
 		System.out.println();
 		// dividing line
-		for (int i = 0; i < columnNames.length; i++) {
+		for (int i = 0; i < columnNames.size(); i++) {
 			int width = columnWidth[i] + 2;
 			String repeated = new String(new char[width]).replace("\0", "-");
 			System.out.print(repeated + "  ");
@@ -92,14 +103,14 @@ public class SimpleTable {
 	 */
 	public void printToConsole2() {
 		// Header:
-		for (int i = 0; i < columnNames.length; i++) {
+		for (int i = 0; i < columnNames.size(); i++) {
 			int width = columnWidth[i] + 4;
 			System.out.printf("%-" + width + "." + (width - 2) + "s",
-					columnNames[i]);
+					columnNames.get(i));
 		}
 		System.out.println();
 		// dividing line
-		for (int i = 0; i < columnNames.length; i++) {
+		for (int i = 0; i < columnNames.size(); i++) {
 			int width = columnWidth[i] + 2;
 			String repeated = new String(new char[width]).replace("\0", "-");
 			System.out.print(repeated + "  ");
@@ -112,7 +123,7 @@ public class SimpleTable {
 	}
 
 
-	public String toWebTable() {
+	public String getWebTable() {
 		StringBuilder SBuilder = new StringBuilder();
 		for (List<String> row : tableData) {
 			SBuilder.append("\t<tr>\n");
