@@ -121,7 +121,7 @@
                                     <a href="directorsfav.jsp">Director's Favorite</a>
                                 </li>
                                 <li>
-                                    <a href="worstofyear.jsp">Worst Actors ever</a>
+                                    <a href="worstofyear.jsp">Worst of the Year</a>
                                 </li>
                                 <li>
                                     <a href="bestofyear.jsp">Best of the year</a>

@@ -95,53 +95,6 @@ public class Query {
 	}
 
 	/**
-	 * This method is used to execute Statement Queries.
-	 * 
-	 * @param query
-	 *            The query string.
-	 * @return SimpleTable The query result, mapped to a SimpleTable.
-	 * @throws SQLException
-	 */
-	private SimpleTable statementQuery(String query) throws SQLException {
-		Statement stmt = connection.createStatement();
-		ResultSet rset = stmt.executeQuery(query);
-		SimpleTable sTable = new SimpleTable(rset);
-		if (stmt != null) {
-			stmt.close();
-		}
-		return sTable;
-	}
-
-	/**
-	 * This method is used to execute PreparedStatement Queries.
-	 * 
-	 * @param query
-	 *            The query string.
-	 * @param setStuff
-	 *            Array of strings and/or ints as Arguments for the query.
-	 * @return SimpleTable The query result, mapped to a SimpleTable.
-	 * @throws SQLException
-	 */
-	private SimpleTable preparedStatementQuery(String query, Object[] setStuff) throws SQLException {
-		PreparedStatement prepstmt = connection.prepareStatement(query);
-		for (int i = 0; i < setStuff.length; i++) {
-			Object object = setStuff[i];
-			if (object instanceof String) {
-				prepstmt.setString(i + 1, (String) object);
-			}
-			if (object instanceof Integer) {
-				prepstmt.setInt(i + 1, (int) object);
-			}
-		}
-		ResultSet rset = prepstmt.executeQuery();
-		SimpleTable sTable = new SimpleTable(rset);
-		if (prepstmt != null) {
-			prepstmt.close();
-		}
-		return sTable;
-	}
-
-	/**
 	 * Query: The top n movies, depending only on their rating.
 	 * 
 	 * @param count
@@ -248,9 +201,21 @@ public class Query {
 	}
 
 	public SimpleTable searchMovie(String movie) throws SQLException {
+//		String query = "SELECT DISTINCT mname AS \"Movie Title\", pyear AS \"Year\", "
+//				+ "rating AS \"Rating\", votings AS \"Votes\", runtime AS \"Runtime\" " + "FROM movie "
+//				+ "WHERE lower(mname) LIKE ? " + "ORDER BY mname asc, pyear asc;";
 		String query = "SELECT DISTINCT mname AS \"Movie Title\", pyear AS \"Year\", "
-				+ "rating AS \"Rating\", votings AS \"Votes\", runtime AS \"Runtime\" " + "FROM movie "
-				+ "WHERE lower(mname) LIKE ? " + "ORDER BY mname asc, pyear asc;";
+				+ "rating AS \"Rating\", votings AS \"Votes\", runtime AS \"Runtime\", "
+//				+ "array_to_string(array_agg(DISTINCT actor.aname),'</td><td>') AS \"Actors:\", "
+				+ "array_to_string(array_agg(DISTINCT director.dname),', ') AS \"Director(s):\" "
+				+ "FROM (((((( directs JOIN acts_in ON directs.imdbid=acts_in.imdbid)  "
+				+ "JOIN genre_of on acts_in.imdbid=genre_of.imdbid)  "
+				+ "JOIN actor ON acts_in.actorid=actor.actorid)  "
+				+ "JOIN director ON directs.directorid=director.directorid) "
+				+ "JOIN genre ON genre_of.genreid=genre.genreid) " + "JOIN movie ON movie.imdbid=directs.imdbid) "
+				+ "WHERE lower(mname) LIKE ? "
+				+ "GROUP BY movie.imdbid, \"Movie Title\", \"Year\", \"Rating\", \"Votes\", \"Runtime\" "
+				+ "ORDER BY mname asc, pyear asc";
 		Object[] setStuff = { "%" + movie.toLowerCase() + "%" };
 		return preparedStatementQuery(query, setStuff);
 	}
@@ -277,6 +242,53 @@ public class Query {
 				+ "WHERE lower(director.dname) LIKE ? " + "ORDER BY dname asc, pyear asc;";
 		Object[] setStuff = { "%" + director.toLowerCase() + "%" };
 		return preparedStatementQuery(query, setStuff);
+	}
+
+	/**
+	 * This method is used to execute Statement Queries.
+	 * 
+	 * @param query
+	 *            The query string.
+	 * @return SimpleTable The query result, mapped to a SimpleTable.
+	 * @throws SQLException
+	 */
+	private SimpleTable statementQuery(String query) throws SQLException {
+		Statement stmt = connection.createStatement();
+		ResultSet rset = stmt.executeQuery(query);
+		SimpleTable sTable = new SimpleTable(rset);
+		if (stmt != null) {
+			stmt.close();
+		}
+		return sTable;
+	}
+
+	/**
+	 * This method is used to execute PreparedStatement Queries.
+	 * 
+	 * @param query
+	 *            The query string.
+	 * @param setStuff
+	 *            Array of strings and/or ints as Arguments for the query.
+	 * @return SimpleTable The query result, mapped to a SimpleTable.
+	 * @throws SQLException
+	 */
+	private SimpleTable preparedStatementQuery(String query, Object[] setStuff) throws SQLException {
+		PreparedStatement prepstmt = connection.prepareStatement(query);
+		for (int i = 0; i < setStuff.length; i++) {
+			Object object = setStuff[i];
+			if (object instanceof String) {
+				prepstmt.setString(i + 1, (String) object);
+			}
+			if (object instanceof Integer) {
+				prepstmt.setInt(i + 1, (int) object);
+			}
+		}
+		ResultSet rset = prepstmt.executeQuery();
+		SimpleTable sTable = new SimpleTable(rset);
+		if (prepstmt != null) {
+			prepstmt.close();
+		}
+		return sTable;
 	}
 
 }

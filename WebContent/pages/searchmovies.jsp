@@ -128,7 +128,7 @@
                                     <a href="directorsfav.jsp">Director's Favorite</a>
                                 </li>
                                 <li>
-                                    <a href="worstofyear.jsp">Worst Actors ever</a>
+                                    <a href="worstofyear.jsp">Worst of the Year</a>
                                 </li>
                                 <li>
                                     <a href="bestofyear.jsp">Best of the year</a>
@@ -173,7 +173,7 @@
 						</div>
 						<!-- /.row -->
 
-						<jsp:include page="data.jsp">
+						<jsp:include page="data2.jsp">
 							<jsp:param name="param1" value="${param.param1}" />
 							<jsp:param name="queryType" value="${queryType}" />
 						</jsp:include>
