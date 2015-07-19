@@ -18,18 +18,16 @@ public class ConnectionFactory {
 	private static String dbPass;
 
 	public ConnectionFactory() {
-			dbServer = "localhost";
-			dbPort = "15432";
-			dbName = "movies";
-			dbUser = "myapp";
-			dbPass = "dbpass";
+		dbServer = "localhost";
+		dbPort = "15432";
+		dbName = "movies";
+		dbUser = "myapp";
+		dbPass = "dbpass";
 	}
 
 	/**
 	 * A factory method for creating a connection to the database.
 	 * 
-	 * @param databaseName
-	 *            The name of the database.
 	 * @return Connection The connection to the database.
 	 */
 	public Connection getConnection() {

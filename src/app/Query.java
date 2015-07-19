@@ -25,7 +25,7 @@ public class Query {
 	}
 
 	/**
-	 * Query: Show 100 entries of the movie table.
+	 * This Method executes a query: Show 100 entries of the movie table.
 	 * 
 	 * @return SimpleTable The query result, mapped to a SimpleTable.
 	 * @throws SQLException
@@ -37,7 +37,7 @@ public class Query {
 	}
 
 	/**
-	 * Query: All movies produced in a specific year.
+	 * This Method executes a query: All movies produced in a specific year.
 	 * 
 	 * @param year
 	 *            The production year.
@@ -54,7 +54,7 @@ public class Query {
 	}
 
 	/**
-	 * Query: The longest entry in a column.
+	 * This Method executes a query: The longest entry in a column.
 	 * 
 	 * @param table
 	 *            Which table.
@@ -73,7 +73,7 @@ public class Query {
 	}
 
 	/**
-	 * Query: The n longest entries in a column.
+	 * This Method executes a query: The n longest entries in a column.
 	 * 
 	 * @param table
 	 *            Which table.
@@ -95,7 +95,8 @@ public class Query {
 	}
 
 	/**
-	 * Query: The top n movies, depending only on their rating.
+	 * This Method executes a query: The top n movies, depending only on their
+	 * rating.
 	 * 
 	 * @param count
 	 *            How many top movies.
@@ -104,14 +105,14 @@ public class Query {
 	 *             SQLException on Query errors.
 	 */
 	public SimpleTable topMovies(int count) throws SQLException {
-		String query = "SELECT mname AS \"Top " + count + " Movies\", rating AS \"Rating\" "
-				+ "FROM movie WHERE rating!='NA' ORDER BY rating DESC LIMIT ?";
+		String query = "SELECT mname AS \"Top " + count + " Movies\", " + "rating AS \"Rating\" "
+				+ "FROM movie WHERE rating!='NA' " + "ORDER BY rating DESC LIMIT ?";
 		Object[] setStuff = { count };
 		return preparedStatementQuery(query, setStuff);
 	}
 
 	/**
-	 * Query: The debut year of an actor
+	 * This Method executes a query: The debut year of an actor
 	 * 
 	 * @param actor
 	 *            the actor's name as a string.
@@ -128,6 +129,18 @@ public class Query {
 		return preparedStatementQuery(query, setStuff);
 	}
 
+	/**
+	 * This Method executes a query: Who (Actor/Director) made the most movies
+	 * in this year?
+	 * 
+	 * @param year
+	 *            The year.
+	 * @param type
+	 *            The type: either "Actor" or "Director".
+	 * @return SimpleTable The query result, mapped to a SimpleTable.
+	 * @throws SQLException
+	 *             SQLException on Query errors.
+	 */
 	public SimpleTable mostMovies(String year, String type) throws SQLException {
 		String query = null;
 		if (type.equals("Director")) {
@@ -145,6 +158,16 @@ public class Query {
 		return preparedStatementQuery(query, setStuff);
 	}
 
+	/**
+	 * This Method executes a query: Which actor appears the most in this
+	 * director's movies?
+	 * 
+	 * @param director
+	 *            The director.
+	 * @return SimpleTable The query result, mapped to a SimpleTable.
+	 * @throws SQLException
+	 *             SQLException on Query errors.
+	 */
 	public SimpleTable directorsFav(String director) throws SQLException {
 		String query = "SELECT DISTINCT dname AS \"The Director:\", aname AS \"And his most favorite Actor:\", count(aname)  AS \"# Movies\", "
 				+ "array_to_string(array_agg(movie.mname),'</td><td>') AS \"Movies:\" "
@@ -158,6 +181,18 @@ public class Query {
 		return preparedStatementQuery(query, setStuff);
 	}
 
+	/**
+	 * This Method executes a query: Who (Actor/Director) had the worst average
+	 * rating this year?
+	 * 
+	 * @param year
+	 *            The year.
+	 * @param type
+	 *            The type: either "Actor" or "Director".
+	 * @return SimpleTable The query result, mapped to a SimpleTable.
+	 * @throws SQLException
+	 *             SQLException on Query errors.
+	 */
 	public SimpleTable worstOfYear(String year, String type) throws SQLException {
 		String query = null;
 		if (type.equals("Director")) {
@@ -179,6 +214,18 @@ public class Query {
 		return preparedStatementQuery(query, setStuff);
 	}
 
+	/**
+	 * This Method executes a query: Who (Actor/Director) had the best average
+	 * rating this year?
+	 * 
+	 * @param year
+	 *            The year.
+	 * @param type
+	 *            The type: either "Actor" or "Director".
+	 * @return SimpleTable The query result, mapped to a SimpleTable.
+	 * @throws SQLException
+	 *             SQLException on Query errors.
+	 */
 	public SimpleTable bestOfYear(String year, String type) throws SQLException {
 		String query = null;
 		if (type.equals("Director")) {
@@ -200,10 +247,20 @@ public class Query {
 		return preparedStatementQuery(query, setStuff);
 	}
 
+	/**
+	 * This Method executes a query: Search for movies (fuzzy)
+	 * 
+	 * @param movie
+	 *            The movie.
+	 * @return SimpleTable The query result, mapped to a SimpleTable.
+	 * @throws SQLException
+	 *             SQLException on Query errors.
+	 */
 	public SimpleTable searchMovie(String movie) throws SQLException {
-//		String query = "SELECT DISTINCT mname AS \"Movie Title\", pyear AS \"Year\", "
-//				+ "rating AS \"Rating\", votings AS \"Votes\", runtime AS \"Runtime\" " + "FROM movie "
-//				+ "WHERE lower(mname) LIKE ? " + "ORDER BY mname asc, pyear asc;";
+//		 String query = "SELECT DISTINCT mname AS \"Movie Title\", pyear AS \"Year\", "
+//		 + "rating AS \"Rating\", votings AS \"Votes\", runtime AS \"Runtime\" "
+//		 + "FROM movie "
+//		 + "WHERE lower(mname) LIKE ? " + "ORDER BY mname asc, pyear asc;";
 		String query = "SELECT DISTINCT mname AS \"Movie Title\", pyear AS \"Year\", "
 				+ "rating AS \"Rating\", votings AS \"Votes\", runtime AS \"Runtime\", "
 //				+ "array_to_string(array_agg(DISTINCT actor.aname),'</td><td>') AS \"Actors:\", "
@@ -220,6 +277,15 @@ public class Query {
 		return preparedStatementQuery(query, setStuff);
 	}
 
+	/**
+	 * This Method executes a query: Search for actors (fuzzy)
+	 * 
+	 * @param actor
+	 *            The actor.
+	 * @return SimpleTable The query result, mapped to a SimpleTable.
+	 * @throws SQLException
+	 *             SQLException on Query errors.
+	 */
 	public SimpleTable searchActor(String actor) throws SQLException {
 		String query = "SELECT DISTINCT aname AS \"Actor\", mname AS \"Movie Title\", pyear AS \"Year\", rating AS \"Rating\" "
 				+ "FROM (((((( directs JOIN acts_in ON directs.imdbid=acts_in.imdbid)  "
@@ -232,6 +298,15 @@ public class Query {
 		return preparedStatementQuery(query, setStuff);
 	}
 
+	/**
+	 * This Method executes a query: Search for directors (fuzzy)
+	 * 
+	 * @param director
+	 *            The director.
+	 * @return SimpleTable The query result, mapped to a SimpleTable.
+	 * @throws SQLException
+	 *             SQLException on Query errors.
+	 */
 	public SimpleTable searchDirector(String director) throws SQLException {
 		String query = "SELECT DISTINCT dname AS \"Director\", mname AS \"Movie Title\", pyear AS \"Year\", rating AS \"Rating\" "
 				+ "FROM (((((( directs JOIN acts_in ON directs.imdbid=acts_in.imdbid)  "
@@ -251,6 +326,7 @@ public class Query {
 	 *            The query string.
 	 * @return SimpleTable The query result, mapped to a SimpleTable.
 	 * @throws SQLException
+	 *             SQLException on Query errors.
 	 */
 	private SimpleTable statementQuery(String query) throws SQLException {
 		Statement stmt = connection.createStatement();
@@ -271,6 +347,7 @@ public class Query {
 	 *            Array of strings and/or ints as Arguments for the query.
 	 * @return SimpleTable The query result, mapped to a SimpleTable.
 	 * @throws SQLException
+	 *             SQLException on Query errors.
 	 */
 	private SimpleTable preparedStatementQuery(String query, Object[] setStuff) throws SQLException {
 		PreparedStatement prepstmt = connection.prepareStatement(query);
