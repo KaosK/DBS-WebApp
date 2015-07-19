@@ -12,10 +12,10 @@
 	ConnectionFactory connFactory = new ConnectionFactory();
 	Connection conn = connFactory.getConnection();
 	Query query = new Query(conn);
-	SimpleTable sTable1 = query.actorDebutYear("Johnny Depp");
-	sTable1.printToConsole2();
+// 	SimpleTable sTable1 = query.actorDebutYear("Johnny Depp");
+// 	sTable1.printToConsole2();
 
-	pageContext.setAttribute("table", sTable1);
+// 	pageContext.setAttribute("table", sTable1);
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
